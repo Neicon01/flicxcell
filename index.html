@@ -54,11 +54,12 @@ nav.dark{color:var(--white);}
 }
 .nav-link:hover{opacity:1;}
 .nav-logo{
-  font-family:'Cormorant Garamond',serif;
-  font-size:18px;font-weight:400;letter-spacing:0.2em;text-transform:uppercase;
-  color:inherit;pointer-events:all;cursor:pointer;
+  pointer-events:all;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
 }
-.nav-logo .x{color:var(--aqua);}
+.nav-logo-img{
+  height:64px;width:auto;display:block;
+}
 
 /* ── PROGRESS ── */
 #progress-line{
@@ -205,9 +206,18 @@ nav.light ~ #dots .dot{background:var(--navy-30);}
   font-size:10px;letter-spacing:0.28em;text-transform:uppercase;
   color:var(--white-50);
 }
-.hero-right{position:relative;}
-.hero-right .ph{background:rgba(127,231,242,0.04);border-color:rgba(127,231,242,0.1);}
-.hero-right .ph-label,.hero-right .ph-icon{color:var(--aqua);}
+.hero-right{position:relative;overflow:hidden;}
+.hero-img,.story-img,.rover-img,.prod-img{
+  width:100%;height:100%;
+  object-fit:cover;object-position:center;
+  display:block;
+}
+.val-bg-img{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  object-fit:cover;object-position:center;
+  display:block;z-index:0;
+}
 
 /* hero intro animation */
 .hero-left .hero-eyebrow{
@@ -255,15 +265,12 @@ nav.light ~ #dots .dot{background:var(--navy-30);}
   color:var(--navy-60);max-width:370px;
 }
 .story-body p+p{margin-top:18px;}
-.story-right{position:relative;}
-.story-right .ph{border:none;background:rgba(201,214,223,0.22);}
-.story-right .ph-label,.story-right .ph-icon{color:var(--navy);}
+.story-right{position:relative;overflow:hidden;}
 
 /* ══════════════════════════════════════════
    P3  CELLULAR FREEDOM
 ══════════════════════════════════════════ */
 #p3{background:#071C22;}
-#p3 .ph{background:rgba(127,231,242,0.04);border:1px dashed rgba(127,231,242,0.12);}
 .val-overlay{
   position:absolute;bottom:72px;left:64px;z-index:10;max-width:520px;
 }
@@ -294,8 +301,7 @@ nav.light ~ #dots .dot{background:var(--navy-30);}
    P4  ROVER SPIRIT
 ══════════════════════════════════════════ */
 #p4{background:#FFFFFF;display:grid;grid-template-columns:56% 44%;}
-#p4 .ph{background:rgba(255,138,106,0.05);border-color:rgba(255,138,106,0.18);}
-#p4 .ph-label,#p4 .ph-icon{color:var(--coral);}
+.rover-left{position:relative;overflow:hidden;}
 .rover-right{
   display:flex;flex-direction:column;justify-content:center;
   padding:100px 64px 100px 56px;
@@ -309,7 +315,6 @@ nav.light ~ #dots .dot{background:var(--navy-30);}
    P5  HYPER EXTREME
 ══════════════════════════════════════════ */
 #p5{background:var(--navy);}
-#p5 .ph{background:rgba(127,231,242,0.04);border:1px dashed rgba(127,231,242,0.1);}
 .hx-overlay{
   position:absolute;top:50%;right:72px;
   transform:translateY(-50%);
@@ -326,7 +331,7 @@ nav.light ~ #dots .dot{background:var(--navy-30);}
    P6  PRODUCT
 ══════════════════════════════════════════ */
 #p6{background:var(--white);display:grid;grid-template-columns:50% 50%;}
-#p6 .ph{border:none;background:rgba(201,214,223,0.18);}
+.prod-left{position:relative;overflow:hidden;}
 .prod-right{
   display:flex;flex-direction:column;justify-content:center;
   padding:100px 64px;
@@ -434,7 +439,9 @@ nav.light ~ #dots .dot{background:var(--navy-30);}
   <div class="nav-side">
     <button class="nav-link" onclick="goTo(1)">Story</button>
   </div>
-  <div class="nav-logo" onclick="goTo(0)">Flic<span class="x">X</span>cell</div>
+  <div class="nav-logo" onclick="goTo(0)">
+    <img class="nav-logo-img" src="images/logo.png" alt="FlicXcell">
+  </div>
   <div class="nav-side">
     <button class="nav-link" onclick="goTo(6)">SNS</button>
   </div>
@@ -471,11 +478,7 @@ nav.light ~ #dots .dot{background:var(--navy-30);}
       <p class="hero-tag">Protection &amp; Cellular Care</p>
     </div>
     <div class="hero-right">
-      <div class="ph ph-dark">
-        <div class="ph-icon">↑</div>
-        <p class="ph-label">Hero Image<br>Outdoor sunlit lifestyle scene</p>
-        <p class="ph-sub">Recommended: 2160 × 2160 px</p>
-      </div>
+      <img class="hero-img" src="images/hero_back.jpeg" alt="FlicXcell bio-tech cellular care">
     </div>
     <div class="cell-grid"></div>
   </div>
@@ -493,21 +496,13 @@ nav.light ~ #dots .dot{background:var(--navy-30);}
       </div>
     </div>
     <div class="story-right">
-      <div class="ph ph-light">
-        <div class="ph-icon" style="color:var(--navy)">↑</div>
-        <p class="ph-label" style="color:var(--navy)">Brand Story Image<br>Felin collab · outdoor lifestyle mood</p>
-        <p class="ph-sub" style="color:var(--navy)">Recommended: 2160 × 2160 px</p>
-      </div>
+      <img class="story-img" src="images/story.png" alt="FlicXcell brand story">
     </div>
   </div>
 
   <!-- P3 · CELLULAR FREEDOM -->
   <div class="panel" id="p3" data-theme="dark">
-    <div class="ph ph-dark">
-      <div class="ph-icon" style="color:var(--aqua)">↑</div>
-      <p class="ph-label" style="color:var(--aqua)">Cellular Freedom Image<br>Lightweight gel texture · water drops · aqua close-up</p>
-      <p class="ph-sub" style="color:var(--aqua)">Recommended: 3840 × 2160 px</p>
-    </div>
+    <img class="val-bg-img" src="images/cell free.jpeg" alt="Cellular Freedom">
     <div class="val-overlay" style="color:var(--white)">
       <p class="val-num a" style="color:var(--aqua)">01 — Cellular Freedom</p>
       <h2 class="val-h a" style="color:var(--white)">Cellular<br>Freedom</h2>
@@ -523,10 +518,8 @@ nav.light ~ #dots .dot{background:var(--navy-30);}
 
   <!-- P4 · ROVER SPIRIT -->
   <div class="panel" id="p4" data-theme="light">
-    <div class="ph ph-light" style="height:100vh">
-      <div class="ph-icon" style="color:var(--coral)">↑</div>
-      <p class="ph-label" style="color:var(--coral)">Rover Spirit Image<br>Running · concert · festival · city movement</p>
-      <p class="ph-sub" style="color:var(--coral)">Recommended: 2160 × 2160 px</p>
+    <div class="rover-left">
+      <img class="rover-img" src="images/rover.jpeg" alt="Rover Spirit">
     </div>
     <div class="rover-right">
       <p class="val-num a">02 — Rover Spirit</p>
@@ -545,11 +538,7 @@ nav.light ~ #dots .dot{background:var(--navy-30);}
 
   <!-- P5 · HYPER EXTREME -->
   <div class="panel" id="p5" data-theme="dark">
-    <div class="ph ph-dark">
-      <div class="ph-icon" style="color:var(--aqua)">↑</div>
-      <p class="ph-label" style="color:var(--aqua)">Hyper Extreme Image<br>Sunlight rays · heat energy · sweat-resistance visual</p>
-      <p class="ph-sub" style="color:var(--aqua)">Recommended: 3840 × 2160 px</p>
-    </div>
+    <img class="val-bg-img" src="images/hyper.jpeg" alt="Hyper Extreme">
     <div class="hx-overlay">
       <p class="val-num a">03 — Hyper Extreme</p>
       <h2 class="val-h a">Hyper<br>Extreme</h2>
@@ -566,10 +555,8 @@ nav.light ~ #dots .dot{background:var(--navy-30);}
 
   <!-- P6 · PRODUCT -->
   <div class="panel" id="p6" data-theme="light">
-    <div class="ph ph-light">
-      <div class="ph-icon" style="color:var(--navy)">↑</div>
-      <p class="ph-label" style="color:var(--navy)">Product Sample Image<br>ACTIVE SUN CARE AQUA SHIELD SUNSCREEN</p>
-      <p class="ph-sub" style="color:var(--navy)">Recommended: 2160 × 2160 px · white background</p>
+    <div class="prod-left">
+      <img class="prod-img" src="images/The Product_2.jpeg" alt="Active Sun Care Aqua Shield Sunscreen">
     </div>
     <div class="prod-right">
       <p class="prod-label a">The Product</p>
