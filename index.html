@@ -109,7 +109,7 @@ nav.light ~ #dots .dot{background:var(--navy-30);}
 
 /* ── MAIN CONTAINER ── */
 #track{
-  display:flex;height:100vh;
+  display:flex;height:100vh;height:100dvh;
   overflow-x:scroll;overflow-y:hidden;
   scroll-snap-type:x mandatory;
   scrollbar-width:none;-ms-overflow-style:none;
@@ -118,7 +118,7 @@ nav.light ~ #dots .dot{background:var(--navy-30);}
 
 /* ── PANEL BASE ── */
 .panel{
-  width:100vw;min-width:100vw;height:100vh;flex-shrink:0;
+  width:100vw;min-width:100vw;height:100vh;height:100dvh;flex-shrink:0;
   scroll-snap-align:start;
   position:relative;overflow:hidden;
 }
@@ -168,7 +168,7 @@ nav.light ~ #dots .dot{background:var(--navy-30);}
 .a:nth-child(6){transition-delay:0.66s;}
 
 /* ── DIVIDER ── */
-.rule{width:44px;height:1px;margin:28px 0;}
+.rule{width:44px;height:1px;margin:clamp(14px,2.5vh,28px) 0;}
 .rule-aqua{background:var(--aqua);}
 .rule-coral{background:var(--coral);}
 .rule-navy{background:var(--navy);}
@@ -248,23 +248,28 @@ nav.light ~ #dots .dot{background:var(--navy-30);}
    P2  BRAND STORY
 ══════════════════════════════════════════ */
 #p2{background:var(--white);display:grid;grid-template-columns:44% 56%;}
+#p2 > *{min-height:0;}
 .story-left{
-  display:flex;flex-direction:column;justify-content:center;
-  padding:100px 56px 100px 64px;
+  display:flex;flex-direction:column;justify-content:flex-start;
+  padding:clamp(48px,9vh,100px) clamp(32px,4vw,56px) clamp(36px,5vh,72px) clamp(32px,4vw,64px);
+  min-height:0;max-height:100%;
+  overflow-y:auto;overscroll-behavior:contain;
+  scrollbar-width:none;-ms-overflow-style:none;
 }
+.story-left::-webkit-scrollbar{display:none;}
 .eyebrow{
   font-size:9px;letter-spacing:0.32em;text-transform:uppercase;color:var(--aqua);
 }
 .story-h{
   font-family:'Cormorant Garamond',serif;
-  font-size:clamp(44px,5vw,72px);font-weight:500;line-height:1.05;
-  color:var(--navy);margin-top:20px;
+  font-size:clamp(32px,5.5vh,72px);font-weight:500;line-height:1.05;
+  color:var(--navy);margin-top:clamp(12px,2vh,20px);
 }
 .story-body{
-  font-size:15px;line-height:1.95;
+  font-size:clamp(13px,1.6vh,15px);line-height:1.85;
   color:var(--navy-60);max-width:370px;
 }
-.story-body p+p{margin-top:18px;}
+.story-body p+p{margin-top:clamp(10px,1.8vh,18px);}
 .story-right{position:relative;overflow:hidden;}
 
 /* ══════════════════════════════════════════
@@ -272,7 +277,8 @@ nav.light ~ #dots .dot{background:var(--navy-30);}
 ══════════════════════════════════════════ */
 #p3{background:#071C22;}
 .val-overlay{
-  position:absolute;bottom:72px;left:64px;z-index:10;max-width:520px;
+  position:absolute;bottom:clamp(32px,6vh,72px);left:clamp(32px,4vw,64px);
+  z-index:10;max-width:min(520px,42vw);
 }
 .val-num{
   font-size:9px;letter-spacing:0.32em;text-transform:uppercase;color:var(--aqua);
@@ -280,11 +286,11 @@ nav.light ~ #dots .dot{background:var(--navy-30);}
 }
 .val-h{
   font-family:'Cormorant Garamond',serif;
-  font-size:clamp(60px,7.5vw,108px);font-weight:500;line-height:0.92;
-  color:var(--navy);margin-bottom:20px;
+  font-size:clamp(44px,7vh,108px);font-weight:500;line-height:0.92;
+  color:var(--navy);margin-bottom:clamp(12px,2vh,20px);
 }
 .val-desc{
-  font-size:15px;line-height:1.85;color:var(--navy-60);
+  font-size:clamp(13px,1.6vh,15px);line-height:1.8;color:var(--navy-60);
   max-width:440px;
 }
 .bg-num{
@@ -301,10 +307,19 @@ nav.light ~ #dots .dot{background:var(--navy-30);}
    P4  ROVER SPIRIT
 ══════════════════════════════════════════ */
 #p4{background:#FFFFFF;display:grid;grid-template-columns:56% 44%;}
+#p4 > *{min-height:0;}
 .rover-left{position:relative;overflow:hidden;}
-.rover-right{
-  display:flex;flex-direction:column;justify-content:center;
-  padding:100px 64px 100px 56px;
+.rover-right,.prod-right{
+  display:flex;flex-direction:column;
+  padding:clamp(48px,9vh,100px) clamp(40px,4vw,64px);
+  min-height:0;max-height:100%;
+  overflow-y:auto;overscroll-behavior:contain;
+  scrollbar-width:none;-ms-overflow-style:none;
+}
+.rover-right::-webkit-scrollbar,
+.prod-right::-webkit-scrollbar{display:none;}
+.panel-text-inner{
+  margin-block:auto;flex-shrink:0;width:100%;
 }
 .rover-right .val-num{color:var(--coral);}
 .rover-right .val-h{color:var(--navy);}
@@ -316,9 +331,9 @@ nav.light ~ #dots .dot{background:var(--navy-30);}
 ══════════════════════════════════════════ */
 #p5{background:var(--navy);}
 .hx-overlay{
-  position:absolute;top:50%;right:72px;
+  position:absolute;top:50%;right:clamp(32px,4vw,72px);
   transform:translateY(-50%);
-  text-align:right;z-index:10;max-width:420px;
+  text-align:right;z-index:10;max-width:min(420px,38vw);
 }
 .hx-overlay .val-num{color:var(--lime);margin-bottom:14px;}
 .hx-overlay .val-h{color:var(--white);}
@@ -331,17 +346,17 @@ nav.light ~ #dots .dot{background:var(--navy-30);}
    P6  PRODUCT
 ══════════════════════════════════════════ */
 #p6{background:var(--white);display:grid;grid-template-columns:50% 50%;}
+#p6 > *{min-height:0;}
 .prod-left{position:relative;overflow:hidden;}
 .prod-right{
-  display:flex;flex-direction:column;justify-content:center;
-  padding:100px 64px;
+  padding:clamp(48px,9vh,100px) clamp(40px,4vw,64px);
   border-left:1px solid rgba(20,33,61,0.07);
 }
 .prod-label{font-size:9px;letter-spacing:0.32em;text-transform:uppercase;color:var(--aqua);}
 .prod-name{
   font-family:'Cormorant Garamond',serif;
-  font-size:clamp(34px,4.2vw,58px);font-weight:500;line-height:1.15;
-  color:var(--navy);margin-top:16px;
+  font-size:clamp(28px,4.5vh,58px);font-weight:500;line-height:1.15;
+  color:var(--navy);margin-top:clamp(10px,1.5vh,16px);
 }
 .prod-spec{
   font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
@@ -355,9 +370,10 @@ nav.light ~ #dots .dot{background:var(--navy-30);}
   margin-top:36px;width:fit-content;
 }
 .prod-body{
-  font-size:15px;line-height:1.9;color:var(--navy-60);
-  max-width:340px;margin-top:28px;
+  font-size:clamp(13px,1.6vh,15px);line-height:1.85;color:var(--navy-60);
+  max-width:340px;margin-top:clamp(16px,2.5vh,28px);
 }
+.coming-badge{margin-top:clamp(20px,3vh,36px);}
 
 /* ══════════════════════════════════════════
    P7  SNS / CTA
@@ -373,30 +389,30 @@ nav.light ~ #dots .dot{background:var(--navy-30);}
 .sns-eyebrow{font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--aqua);}
 .sns-h{
   font-family:'Cormorant Garamond',serif;
-  font-size:clamp(68px,9.5vw,144px);font-weight:500;line-height:0.9;
-  color:var(--white);margin-top:20px;
+  font-size:clamp(80px,14vh,144px);font-weight:500;line-height:1.2;
+  color:var(--white);margin-top:-10px;
 }
 .sns-h em{font-style:italic;color:var(--aqua);}
 .sns-sub{
   font-size:15px;line-height:1.85;
-  color:var(--white-50);max-width:480px;margin:28px auto 0;
+  color:var(--white-50);max-width:480px;margin:0 auto 0;
 }
 .sns-btn{
-  display:inline-flex;align-items:center;gap:18px;
-  margin-top:56px;padding:17px 52px;
+  display:inline-flex;align-items:center;gap:22px;
+  margin-top:56px;padding:22px 68px;
   background:var(--coral);color:var(--white);
   text-decoration:none;
-  font-size:10px;letter-spacing:0.25em;text-transform:uppercase;
+  font-size:13px;letter-spacing:0.22em;text-transform:uppercase;
   transition:background 0.3s, transform 0.3s;
 }
 .sns-btn:hover{background:#f07050;transform:translateY(-2px);}
 .sns-btn-arrow{
-  display:inline-block;width:18px;height:1px;background:white;
+  display:inline-block;width:22px;height:2px;background:white;
   position:relative;
 }
 .sns-btn-arrow::after{
-  content:'';position:absolute;right:-1px;top:-4px;
-  width:8px;height:8px;
+  content:'';position:absolute;right:-1px;top:-5px;
+  width:9px;height:9px;
   border-right:1px solid white;border-top:1px solid white;
   transform:rotate(45deg);
 }
@@ -405,7 +421,7 @@ nav.light ~ #dots .dot{background:var(--navy-30);}
   color:var(--white-25);
 }
 .sns-footer{
-  position:absolute;bottom:32px;
+  position:absolute;bottom:90px;
   font-size:9px;letter-spacing:0.22em;text-transform:uppercase;
   color:var(--white-25);
 }
@@ -425,6 +441,36 @@ nav.light ~ #dots .dot{background:var(--navy-30);}
   opacity:0;animation:fadeup 0.8s 0.3s forwards;
 }
 .loader-logo .x{color:var(--aqua);}
+
+/* ── SHORT VIEWPORT (MacBook Air 등) ── */
+@media (max-height:820px){
+  nav{padding:20px 40px;}
+  .nav-logo-img{height:48px;}
+  .hero-left{padding:0 40px clamp(40px,6vh,64px);}
+  .hero-h1{font-size:clamp(56px,12vh,100px);margin-bottom:20px;}
+  .hero-eyebrow{margin-bottom:16px;}
+  .val-overlay,.hx-overlay{
+    top:auto;bottom:clamp(28px,5vh,48px);
+    transform:none;
+  }
+  .hx-overlay{max-width:min(380px,45vw);}
+  .bg-num{font-size:clamp(200px,35vh,480px);bottom:-40px;}
+  .tags{margin-top:clamp(12px,2vh,24px);gap:6px;}
+  .tag{padding:5px 12px;font-size:8px;}
+  #p7{padding:0 clamp(32px,5vw,80px);}
+  .sns-h{font-size:clamp(72px,16vh,128px);}
+  .sns-btn{
+    margin-top:clamp(28px,4vh,56px);
+    padding:20px 60px;font-size:12px;
+  }
+  .sns-sub{font-size:14px;margin-top:0;}
+}
+@media (max-height:680px){
+  .story-h{font-size:clamp(28px,5vh,48px);}
+  .story-body{font-size:13px;line-height:1.7;}
+  .val-h{font-size:clamp(36px,6.5vh,72px);}
+  .prod-name{font-size:clamp(24px,4.5vh,40px);}
+}
 </style>
 </head>
 <body>
@@ -522,15 +568,17 @@ nav.light ~ #dots .dot{background:var(--navy-30);}
       <img class="rover-img" src="images/rover.jpeg" alt="Rover Spirit">
     </div>
     <div class="rover-right">
-      <p class="val-num a">02 — Rover Spirit</p>
-      <h2 class="val-h a">Rover<br>Spirit</h2>
-      <div class="rule rule-coral a"></div>
-      <p class="val-desc a">From city streets to desert terrain — built for those who explore without limits. Concerts, running, travel, festivals. Wherever you move, FLicxcell moves with you.</p>
-      <div class="tags a">
-        <span class="tag" style="border-color:var(--coral);color:var(--coral)">Running</span>
-        <span class="tag" style="border-color:var(--coral);color:var(--coral)">Festival</span>
-        <span class="tag" style="border-color:var(--coral);color:var(--coral)">Travel</span>
-        <span class="tag" style="border-color:var(--coral);color:var(--coral)">City</span>
+      <div class="panel-text-inner">
+        <p class="val-num a">02 — Rover Spirit</p>
+        <h2 class="val-h a">Rover<br>Spirit</h2>
+        <div class="rule rule-coral a"></div>
+        <p class="val-desc a">From city streets to desert terrain — built for those who explore without limits. Concerts, running, travel, festivals. Wherever you move, FLicxcell moves with you.</p>
+        <div class="tags a">
+          <span class="tag" style="border-color:var(--coral);color:var(--coral)">Running</span>
+          <span class="tag" style="border-color:var(--coral);color:var(--coral)">Festival</span>
+          <span class="tag" style="border-color:var(--coral);color:var(--coral)">Travel</span>
+          <span class="tag" style="border-color:var(--coral);color:var(--coral)">City</span>
+        </div>
       </div>
     </div>
     <div class="cell-grid"></div>
@@ -556,25 +604,29 @@ nav.light ~ #dots .dot{background:var(--navy-30);}
   <!-- P6 · PRODUCT -->
   <div class="panel" id="p6" data-theme="light">
     <div class="prod-left">
-      <img class="prod-img" src="images/The Product_2.jpeg" alt="Active Sun Care Aqua Shield Sunscreen">
+      <img class="prod-img" src="images/The Product_3.png" alt="Active Sun Care Aqua Shield Sunscreen">
     </div>
     <div class="prod-right">
-      <p class="prod-label a">The Product</p>
-      <h2 class="prod-name a">Active Sun Care<br>Aqua Shield<br>Sunscreen</h2>
-      <p class="prod-spec a">SPF 50+ · PA++++ · K-Beauty Formula</p>
-      <div class="coming-badge a">Coming Soon</div>
-      <p class="prod-body a">A dermatologist-grade active sunscreen engineered for the sunlit generation. Lightweight aqua-gel texture. Designed to move with you — from morning runs to midnight concerts.</p>
+      <div class="panel-text-inner">
+        <p class="prod-label a">The Product</p>
+        <h2 class="prod-name a">Active Sun Care<br>Aqua Shield<br>Sunscreen</h2>
+        <p class="prod-spec a">SPF 50+ · PA++++ · K-Beauty Formula</p>
+        <div class="coming-badge a">Coming Soon</div>
+        <p class="prod-body a">A dermatologist-grade active sunscreen engineered for the sunlit generation. Lightweight aqua-gel texture. Designed to move with you — from morning runs to midnight concerts.</p>
+      </div>
     </div>
   </div>
 
   <!-- P7 · SNS CTA -->
   <div class="panel" id="p7" data-theme="dark">
     <div class="cell-grid"></div>
-    <p class="sns-eyebrow a">Join the movement</p>
-    <h2 class="sns-h a">Be the<br><em>First.</em></h2>
-    <p class="sns-sub a">FLicxcell Supporters, 1st Generation — now recruiting.<br>Follow us on Instagram and be part of the brand from day one.</p>
-    <a class="sns-btn a" href="https://instagram.com/flicxcell" target="_blank" rel="noopener">
-      Follow on Instagram
+    <p class="sns-eyebrow a">Now Recruiting · 1st Generation</p>
+    <h2 class="sns-h a">Supporters<br><em>Wanted.</em></h2>
+    <p class="sns-sub a">FLicxcell is just getting started.<br>
+Be part of the founding crew —<br>
+follow us on Instagram now.</p>
+    <a class="sns-btn a" href="https://instagram.com/flicxcell.official" target="_blank" rel="noopener">
+      Join Us on Instagram
       <span class="sns-btn-arrow"></span>
     </a>
     <p class="sns-handle a">@flicxcell</p>
