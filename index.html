@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FLicxcell — Protection & Cellular Care</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --aqua:#7FE7F2;
+  --white:#F8FEFF;
+  --navy:#14213D;
+  --silver:#C9D6DF;
+  --coral:#FF8A6A;
+  --lime:#D8FF63;
+  --navy-90:rgba(20,33,61,0.9);
+  --navy-60:rgba(20,33,61,0.6);
+  --navy-30:rgba(20,33,61,0.3);
+  --white-80:rgba(248,254,255,0.8);
+  --white-50:rgba(248,254,255,0.5);
+  --white-25:rgba(248,254,255,0.25);
+}
+
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--navy);
+  color:var(--navy);
+  cursor:default;
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;
+  z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:32px 56px;
+  transition:color 0.5s;
+  pointer-events:none;
+}
+nav.light{color:var(--navy);}
+nav.dark{color:var(--white);}
+.nav-side{display:flex;gap:40px;pointer-events:all;}
+.nav-link{
+  font-size:10px;letter-spacing:0.28em;text-transform:uppercase;
+  text-decoration:none;color:inherit;
+  cursor:pointer;opacity:0.7;
+  transition:opacity 0.3s;
+  background:none;border:none;font-family:inherit;
+}
+.nav-link:hover{opacity:1;}
+.nav-logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:18px;font-weight:400;letter-spacing:0.2em;text-transform:uppercase;
+  color:inherit;pointer-events:all;cursor:pointer;
+}
+.nav-logo .x{color:var(--aqua);}
+
+/* ── PROGRESS ── */
+#progress-line{
+  position:fixed;bottom:0;left:0;height:1px;
+  background:var(--aqua);width:0%;
+  z-index:300;transition:width 0.08s linear;
+}
+
+/* ── PANEL DOTS ── */
+#dots{
+  position:fixed;bottom:36px;left:50%;transform:translateX(-50%);
+  display:flex;gap:10px;z-index:200;align-items:center;
+}
+.dot{
+  width:5px;height:5px;border-radius:50%;
+  transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
+  cursor:pointer;border:none;background:none;
+}
+nav.dark ~ #dots .dot{background:var(--white-25);}
+nav.light ~ #dots .dot{background:var(--navy-30);}
+.dot.active{
+  width:24px;border-radius:3px;
+  background:var(--aqua)!important;
+}
+
+/* ── SCROLL HINT ── */
+#scroll-hint{
+  position:fixed;right:56px;bottom:40px;
+  display:flex;align-items:center;gap:14px;
+  font-size:9px;letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--white-25);
+  z-index:200;
+  opacity:1;transition:opacity 0.8s;
+}
+#scroll-hint.hidden{opacity:0;pointer-events:none;}
+.hint-track{
+  width:36px;height:1px;background:rgba(255,255,255,0.15);
+  position:relative;overflow:hidden;
+}
+.hint-track::after{
+  content:'';position:absolute;
+  top:0;left:-100%;width:100%;height:100%;
+  background:var(--aqua);
+  animation:slide 1.8s 1s infinite ease-in-out;
+}
+@keyframes slide{0%{left:-100%}100%{left:100%}}
+
+/* ── MAIN CONTAINER ── */
+#track{
+  display:flex;height:100vh;
+  overflow-x:scroll;overflow-y:hidden;
+  scroll-snap-type:x mandatory;
+  scrollbar-width:none;-ms-overflow-style:none;
+}
+#track::-webkit-scrollbar{display:none;}
+
+/* ── PANEL BASE ── */
+.panel{
+  width:100vw;min-width:100vw;height:100vh;flex-shrink:0;
+  scroll-snap-align:start;
+  position:relative;overflow:hidden;
+}
+
+/* ── IMAGE PLACEHOLDER ── */
+.ph{
+  width:100%;height:100%;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:12px;
+  background:rgba(201,214,223,0.18);
+  border:1.5px dashed rgba(127,231,242,0.25);
+  position:relative;
+}
+.ph-dark{
+  background:rgba(127,231,242,0.04);
+  border-color:rgba(127,231,242,0.12);
+}
+.ph-light{
+  background:rgba(201,214,223,0.2);
+  border-color:rgba(20,33,61,0.12);
+}
+.ph-icon{
+  width:40px;height:40px;
+  border:1px solid currentColor;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0.25;font-size:18px;
+}
+.ph-label{
+  font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
+  text-align:center;line-height:1.8;opacity:0.3;padding:0 24px;
+}
+.ph-sub{font-size:9px;letter-spacing:0.15em;opacity:0.2;margin-top:4px;}
+
+/* ── ANIM ── */
+.a{
+  opacity:0;transform:translateY(28px);
+  transition:opacity 0.9s cubic-bezier(0.4,0,0.2,1),
+             transform 0.9s cubic-bezier(0.4,0,0.2,1);
+}
+.a.show{opacity:1;transform:none;}
+.a:nth-child(1){transition-delay:0.05s;}
+.a:nth-child(2){transition-delay:0.18s;}
+.a:nth-child(3){transition-delay:0.30s;}
+.a:nth-child(4){transition-delay:0.42s;}
+.a:nth-child(5){transition-delay:0.54s;}
+.a:nth-child(6){transition-delay:0.66s;}
+
+/* ── DIVIDER ── */
+.rule{width:44px;height:1px;margin:28px 0;}
+.rule-aqua{background:var(--aqua);}
+.rule-coral{background:var(--coral);}
+.rule-navy{background:var(--navy);}
+.rule-white{background:var(--white-25);}
+
+/* ── TAGS ── */
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px;}
+.tag{
+  font-size:9px;letter-spacing:0.22em;text-transform:uppercase;
+  padding:7px 16px;border-radius:20px;
+  border:1px solid;
+}
+
+/* ══════════════════════════════════════════
+   P1  HERO
+══════════════════════════════════════════ */
+#p1{background:var(--navy);display:grid;grid-template-columns:1fr 1fr;}
+.hero-left{
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:0 56px 88px;
+  position:relative;z-index:2;
+}
+.hero-eyebrow{
+  font-size:9px;letter-spacing:0.35em;text-transform:uppercase;
+  color:var(--aqua);margin-bottom:28px;
+}
+.hero-h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(80px,10vw,148px);
+  font-weight:400;line-height:0.88;
+  color:var(--white);margin-bottom:36px;
+}
+.hero-h1 em{font-style:italic;color:var(--aqua);}
+.hero-tag{
+  font-size:10px;letter-spacing:0.28em;text-transform:uppercase;
+  color:var(--white-50);
+}
+.hero-right{position:relative;}
+.hero-right .ph{background:rgba(127,231,242,0.04);border-color:rgba(127,231,242,0.1);}
+.hero-right .ph-label,.hero-right .ph-icon{color:var(--aqua);}
+
+/* hero intro animation */
+.hero-left .hero-eyebrow{
+  opacity:0;animation:fadeup 1s 0.4s forwards;
+}
+.hero-left .hero-h1{
+  opacity:0;animation:fadeup 1s 0.6s forwards;
+}
+.hero-left .hero-tag{
+  opacity:0;animation:fadeup 1s 0.8s forwards;
+}
+@keyframes fadeup{
+  from{opacity:0;transform:translateY(24px);}
+  to{opacity:1;transform:none;}
+}
+
+/* cell grid overlay */
+.cell-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(127,231,242,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(127,231,242,0.04) 1px, transparent 1px);
+  background-size:64px 64px;
+  pointer-events:none;
+}
+
+/* ══════════════════════════════════════════
+   P2  BRAND STORY
+══════════════════════════════════════════ */
+#p2{background:var(--white);display:grid;grid-template-columns:44% 56%;}
+.story-left{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:100px 56px 100px 64px;
+}
+.eyebrow{
+  font-size:9px;letter-spacing:0.32em;text-transform:uppercase;color:var(--aqua);
+}
+.story-h{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(44px,5vw,72px);font-weight:500;line-height:1.05;
+  color:var(--navy);margin-top:20px;
+}
+.story-body{
+  font-size:15px;line-height:1.95;
+  color:var(--navy-60);max-width:370px;
+}
+.story-body p+p{margin-top:18px;}
+.story-right{position:relative;}
+.story-right .ph{border:none;background:rgba(201,214,223,0.22);}
+.story-right .ph-label,.story-right .ph-icon{color:var(--navy);}
+
+/* ══════════════════════════════════════════
+   P3  CELLULAR FREEDOM
+══════════════════════════════════════════ */
+#p3{background:#071C22;}
+#p3 .ph{background:rgba(127,231,242,0.04);border:1px dashed rgba(127,231,242,0.12);}
+.val-overlay{
+  position:absolute;bottom:72px;left:64px;z-index:10;max-width:520px;
+}
+.val-num{
+  font-size:9px;letter-spacing:0.32em;text-transform:uppercase;color:var(--aqua);
+  margin-bottom:14px;
+}
+.val-h{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(60px,7.5vw,108px);font-weight:500;line-height:0.92;
+  color:var(--navy);margin-bottom:20px;
+}
+.val-desc{
+  font-size:15px;line-height:1.85;color:var(--navy-60);
+  max-width:440px;
+}
+.bg-num{
+  position:absolute;
+  font-family:'Cormorant Garamond',serif;
+  font-size:480px;font-weight:300;line-height:1;
+  right:-24px;bottom:-80px;
+  color:rgba(201,214,223,0.18);
+  user-select:none;pointer-events:none;
+  z-index:1;
+}
+
+/* ══════════════════════════════════════════
+   P4  ROVER SPIRIT
+══════════════════════════════════════════ */
+#p4{background:#FFFFFF;display:grid;grid-template-columns:56% 44%;}
+#p4 .ph{background:rgba(255,138,106,0.05);border-color:rgba(255,138,106,0.18);}
+#p4 .ph-label,#p4 .ph-icon{color:var(--coral);}
+.rover-right{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:100px 64px 100px 56px;
+}
+.rover-right .val-num{color:var(--coral);}
+.rover-right .val-h{color:var(--navy);}
+.rover-right .val-desc{color:var(--navy-60);}
+.rover-right .tag{border-color:var(--coral);color:var(--coral);}
+
+/* ══════════════════════════════════════════
+   P5  HYPER EXTREME
+══════════════════════════════════════════ */
+#p5{background:var(--navy);}
+#p5 .ph{background:rgba(127,231,242,0.04);border:1px dashed rgba(127,231,242,0.1);}
+.hx-overlay{
+  position:absolute;top:50%;right:72px;
+  transform:translateY(-50%);
+  text-align:right;z-index:10;max-width:420px;
+}
+.hx-overlay .val-num{color:var(--lime);margin-bottom:14px;}
+.hx-overlay .val-h{color:var(--white);}
+.hx-overlay .val-desc{color:var(--white-50);margin-left:auto;}
+.hx-overlay .tags{justify-content:flex-end;}
+.hx-overlay .tag{border-color:var(--lime);color:var(--navy);background:var(--lime);}
+.hx-overlay .rule{margin-left:auto;background:var(--lime);}
+
+/* ══════════════════════════════════════════
+   P6  PRODUCT
+══════════════════════════════════════════ */
+#p6{background:var(--white);display:grid;grid-template-columns:50% 50%;}
+#p6 .ph{border:none;background:rgba(201,214,223,0.18);}
+.prod-right{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:100px 64px;
+  border-left:1px solid rgba(20,33,61,0.07);
+}
+.prod-label{font-size:9px;letter-spacing:0.32em;text-transform:uppercase;color:var(--aqua);}
+.prod-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(34px,4.2vw,58px);font-weight:500;line-height:1.15;
+  color:var(--navy);margin-top:16px;
+}
+.prod-spec{
+  font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--silver);margin-top:12px;
+}
+.coming-badge{
+  display:inline-block;
+  font-size:9px;letter-spacing:0.28em;text-transform:uppercase;
+  padding:13px 32px;
+  background:var(--navy);color:var(--white);
+  margin-top:36px;width:fit-content;
+}
+.prod-body{
+  font-size:15px;line-height:1.9;color:var(--navy-60);
+  max-width:340px;margin-top:28px;
+}
+
+/* ══════════════════════════════════════════
+   P7  SNS / CTA
+══════════════════════════════════════════ */
+#p7{
+  background:var(--navy);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:0 80px;
+  position:relative;
+}
+#p7 .cell-grid{opacity:0.6;}
+.sns-eyebrow{font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--aqua);}
+.sns-h{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(68px,9.5vw,144px);font-weight:500;line-height:0.9;
+  color:var(--white);margin-top:20px;
+}
+.sns-h em{font-style:italic;color:var(--aqua);}
+.sns-sub{
+  font-size:15px;line-height:1.85;
+  color:var(--white-50);max-width:480px;margin:28px auto 0;
+}
+.sns-btn{
+  display:inline-flex;align-items:center;gap:18px;
+  margin-top:56px;padding:17px 52px;
+  background:var(--coral);color:var(--white);
+  text-decoration:none;
+  font-size:10px;letter-spacing:0.25em;text-transform:uppercase;
+  transition:background 0.3s, transform 0.3s;
+}
+.sns-btn:hover{background:#f07050;transform:translateY(-2px);}
+.sns-btn-arrow{
+  display:inline-block;width:18px;height:1px;background:white;
+  position:relative;
+}
+.sns-btn-arrow::after{
+  content:'';position:absolute;right:-1px;top:-4px;
+  width:8px;height:8px;
+  border-right:1px solid white;border-top:1px solid white;
+  transform:rotate(45deg);
+}
+.sns-handle{
+  margin-top:20px;font-size:11px;letter-spacing:0.15em;
+  color:var(--white-25);
+}
+.sns-footer{
+  position:absolute;bottom:32px;
+  font-size:9px;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--white-25);
+}
+
+/* ── LOADING OVERLAY ── */
+#loader{
+  position:fixed;inset:0;background:var(--navy);
+  display:flex;align-items:center;justify-content:center;
+  z-index:999;
+  transition:opacity 0.8s 0.2s;
+}
+#loader.out{opacity:0;pointer-events:none;}
+.loader-logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:28px;font-weight:300;letter-spacing:0.3em;
+  text-transform:uppercase;color:var(--white);
+  opacity:0;animation:fadeup 0.8s 0.3s forwards;
+}
+.loader-logo .x{color:var(--aqua);}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-logo">Flic<span class="x">X</span>cell</div>
+</div>
+
+<!-- NAV -->
+<nav id="nav" class="dark">
+  <div class="nav-side">
+    <button class="nav-link" onclick="goTo(1)">Story</button>
+  </div>
+  <div class="nav-logo" onclick="goTo(0)">Flic<span class="x">X</span>cell</div>
+  <div class="nav-side">
+    <button class="nav-link" onclick="goTo(6)">SNS</button>
+  </div>
+</nav>
+
+<!-- PROGRESS -->
+<div id="progress-line"></div>
+
+<!-- DOTS -->
+<div id="dots">
+  <button class="dot active" onclick="goTo(0)"></button>
+  <button class="dot" onclick="goTo(1)"></button>
+  <button class="dot" onclick="goTo(2)"></button>
+  <button class="dot" onclick="goTo(3)"></button>
+  <button class="dot" onclick="goTo(4)"></button>
+  <button class="dot" onclick="goTo(5)"></button>
+  <button class="dot" onclick="goTo(6)"></button>
+</div>
+
+<!-- SCROLL HINT -->
+<div id="scroll-hint">
+  <span>Scroll</span>
+  <div class="hint-track"></div>
+</div>
+
+<!-- ═══════════ TRACK ═══════════ -->
+<div id="track">
+
+  <!-- P1 · HERO -->
+  <div class="panel" id="p1" data-theme="dark">
+    <div class="hero-left">
+      <p class="hero-eyebrow">Bio-Tech K-Beauty · Est. 2026</p>
+      <h1 class="hero-h1">Flic<em>X</em><br>cell</h1>
+      <p class="hero-tag">Protection &amp; Cellular Care</p>
+    </div>
+    <div class="hero-right">
+      <div class="ph ph-dark">
+        <div class="ph-icon">↑</div>
+        <p class="ph-label">Hero Image<br>Outdoor sunlit lifestyle scene</p>
+        <p class="ph-sub">Recommended: 2160 × 2160 px</p>
+      </div>
+    </div>
+    <div class="cell-grid"></div>
+  </div>
+
+  <!-- P2 · BRAND STORY -->
+  <div class="panel" id="p2" data-theme="light">
+    <div class="story-left">
+      <p class="eyebrow a">The Source of Light</p>
+      <h2 class="story-h a">We didn't<br>come to<br><em style="font-style:italic;">protect.</em><br>We came to<br>transform.</h2>
+      <div class="rule rule-aqua a"></div>
+      <div class="story-body a">
+        <p>We once believed the sun was the enemy. FLicxcell thinks differently.</p>
+        <p>The sun is the most powerful energy source that awakens every cell on earth. When you apply FLicxcell, your skin cells don't just block UV — they absorb solar energy and convert it into your own radiance.</p>
+        <p>This is not just a sunscreen.<br>This is a cellular energy shield.</p>
+      </div>
+    </div>
+    <div class="story-right">
+      <div class="ph ph-light">
+        <div class="ph-icon" style="color:var(--navy)">↑</div>
+        <p class="ph-label" style="color:var(--navy)">Brand Story Image<br>Felin collab · outdoor lifestyle mood</p>
+        <p class="ph-sub" style="color:var(--navy)">Recommended: 2160 × 2160 px</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- P3 · CELLULAR FREEDOM -->
+  <div class="panel" id="p3" data-theme="dark">
+    <div class="ph ph-dark">
+      <div class="ph-icon" style="color:var(--aqua)">↑</div>
+      <p class="ph-label" style="color:var(--aqua)">Cellular Freedom Image<br>Lightweight gel texture · water drops · aqua close-up</p>
+      <p class="ph-sub" style="color:var(--aqua)">Recommended: 3840 × 2160 px</p>
+    </div>
+    <div class="val-overlay" style="color:var(--white)">
+      <p class="val-num a" style="color:var(--aqua)">01 — Cellular Freedom</p>
+      <h2 class="val-h a" style="color:var(--white)">Cellular<br>Freedom</h2>
+      <p class="val-desc a" style="color:var(--white-50)">Complete isolation from UV and external aggressors — so your skin breathes freely in any environment. Lightweight. Undetectable. Alive.</p>
+      <div class="tags a">
+        <span class="tag" style="border-color:var(--aqua);color:var(--aqua)">Lightweight</span>
+        <span class="tag" style="border-color:var(--aqua);color:var(--aqua)">Hydrating</span>
+        <span class="tag" style="border-color:var(--aqua);color:var(--aqua)">Fresh Finish</span>
+      </div>
+    </div>
+    <div class="bg-num" style="color:rgba(127,231,242,0.05)">01</div>
+  </div>
+
+  <!-- P4 · ROVER SPIRIT -->
+  <div class="panel" id="p4" data-theme="light">
+    <div class="ph ph-light" style="height:100vh">
+      <div class="ph-icon" style="color:var(--coral)">↑</div>
+      <p class="ph-label" style="color:var(--coral)">Rover Spirit Image<br>Running · concert · festival · city movement</p>
+      <p class="ph-sub" style="color:var(--coral)">Recommended: 2160 × 2160 px</p>
+    </div>
+    <div class="rover-right">
+      <p class="val-num a">02 — Rover Spirit</p>
+      <h2 class="val-h a">Rover<br>Spirit</h2>
+      <div class="rule rule-coral a"></div>
+      <p class="val-desc a">From city streets to desert terrain — built for those who explore without limits. Concerts, running, travel, festivals. Wherever you move, FLicxcell moves with you.</p>
+      <div class="tags a">
+        <span class="tag" style="border-color:var(--coral);color:var(--coral)">Running</span>
+        <span class="tag" style="border-color:var(--coral);color:var(--coral)">Festival</span>
+        <span class="tag" style="border-color:var(--coral);color:var(--coral)">Travel</span>
+        <span class="tag" style="border-color:var(--coral);color:var(--coral)">City</span>
+      </div>
+    </div>
+    <div class="cell-grid"></div>
+  </div>
+
+  <!-- P5 · HYPER EXTREME -->
+  <div class="panel" id="p5" data-theme="dark">
+    <div class="ph ph-dark">
+      <div class="ph-icon" style="color:var(--aqua)">↑</div>
+      <p class="ph-label" style="color:var(--aqua)">Hyper Extreme Image<br>Sunlight rays · heat energy · sweat-resistance visual</p>
+      <p class="ph-sub" style="color:var(--aqua)">Recommended: 3840 × 2160 px</p>
+    </div>
+    <div class="hx-overlay">
+      <p class="val-num a">03 — Hyper Extreme</p>
+      <h2 class="val-h a">Hyper<br>Extreme</h2>
+      <div class="rule a" style="margin-left:auto;background:var(--lime);"></div>
+      <p class="val-desc a">Under the most extreme heat and light, FLicxcell holds. Sweat, movement, UV intensity — nothing breaks it down. Surreal endurance, at a cellular level.</p>
+      <div class="tags a" style="justify-content:flex-end">
+        <span class="tag" style="border-color:var(--lime);color:var(--navy);background:var(--lime)">SPF 50+</span>
+        <span class="tag" style="border-color:var(--lime);color:var(--navy);background:var(--lime)">PA++++</span>
+        <span class="tag" style="border-color:var(--lime);color:var(--navy);background:var(--lime)">Long-Lasting</span>
+      </div>
+    </div>
+    <div class="bg-num" style="color:rgba(127,231,242,0.06)">03</div>
+  </div>
+
+  <!-- P6 · PRODUCT -->
+  <div class="panel" id="p6" data-theme="light">
+    <div class="ph ph-light">
+      <div class="ph-icon" style="color:var(--navy)">↑</div>
+      <p class="ph-label" style="color:var(--navy)">Product Sample Image<br>ACTIVE SUN CARE AQUA SHIELD SUNSCREEN</p>
+      <p class="ph-sub" style="color:var(--navy)">Recommended: 2160 × 2160 px · white background</p>
+    </div>
+    <div class="prod-right">
+      <p class="prod-label a">The Product</p>
+      <h2 class="prod-name a">Active Sun Care<br>Aqua Shield<br>Sunscreen</h2>
+      <p class="prod-spec a">SPF 50+ · PA++++ · K-Beauty Formula</p>
+      <div class="coming-badge a">Coming Soon</div>
+      <p class="prod-body a">A dermatologist-grade active sunscreen engineered for the sunlit generation. Lightweight aqua-gel texture. Designed to move with you — from morning runs to midnight concerts.</p>
+    </div>
+  </div>
+
+  <!-- P7 · SNS CTA -->
+  <div class="panel" id="p7" data-theme="dark">
+    <div class="cell-grid"></div>
+    <p class="sns-eyebrow a">Join the movement</p>
+    <h2 class="sns-h a">Be the<br><em>First.</em></h2>
+    <p class="sns-sub a">FLicxcell Supporters, 1st Generation — now recruiting.<br>Follow us on Instagram and be part of the brand from day one.</p>
+    <a class="sns-btn a" href="https://instagram.com/flicxcell" target="_blank" rel="noopener">
+      Follow on Instagram
+      <span class="sns-btn-arrow"></span>
+    </a>
+    <p class="sns-handle a">@flicxcell</p>
+    <p class="sns-footer">© 2026 FLicxcell — flicxcell.com · All rights reserved.</p>
+  </div>
+
+</div><!-- /track -->
+
+<script>
+const track   = document.getElementById('track');
+const nav     = document.getElementById('nav');
+const bar     = document.getElementById('progress-line');
+const hint    = document.getElementById('scroll-hint');
+const dots    = document.querySelectorAll('.dot');
+const panels  = document.querySelectorAll('.panel');
+const N       = panels.length;
+let cur       = 0;
+let locked    = false;
+let lockTimer;
+
+/* ── NAV THEME ── */
+function setTheme(idx){
+  const t = panels[idx]?.dataset.theme || 'dark';
+  nav.className = t === 'dark' ? 'dark' : 'light';
+  hint.style.color = t === 'dark'
+    ? 'rgba(248,254,255,0.22)'
+    : 'rgba(20,33,61,0.3)';
+  // dots colour driven by CSS sibling selector but we force via inline
+  dots.forEach(d=>{
+    if(t==='dark'){
+      d.style.background = d.classList.contains('active')
+        ? 'var(--aqua)' : 'rgba(248,254,255,0.22)';
+    } else {
+      d.style.background = d.classList.contains('active')
+        ? 'var(--aqua)' : 'rgba(20,33,61,0.22)';
+    }
+  });
+}
+
+/* ── DOTS ── */
+function setDot(idx){
+  dots.forEach((d,i)=>{
+    d.classList.toggle('active', i===idx);
+  });
+  setTheme(idx);
+}
+
+/* ── ANIMATE PANEL ── */
+function animatePanel(idx){
+  panels[idx].querySelectorAll('.a').forEach(el=>el.classList.add('show'));
+}
+
+/* ── GO TO ── */
+function goTo(idx){
+  idx = Math.max(0, Math.min(N-1, idx));
+  cur = idx;
+  track.scrollTo({left: idx * window.innerWidth, behavior:'smooth'});
+  setDot(idx);
+  if(idx > 0) hint.classList.add('hidden');
+  else hint.classList.remove('hidden');
+  setTimeout(()=>animatePanel(idx), 200);
+}
+
+/* ── SCROLL SYNC ── */
+let scrollRaf;
+track.addEventListener('scroll', ()=>{
+  cancelAnimationFrame(scrollRaf);
+  scrollRaf = requestAnimationFrame(()=>{
+    const sl = track.scrollLeft;
+    const max = track.scrollWidth - track.clientWidth;
+    bar.style.width = (sl/max*100)+'%';
+
+    const idx = Math.round(sl / window.innerWidth);
+    if(idx !== cur){
+      cur = idx;
+      setDot(idx);
+      animatePanel(idx);
+      if(idx > 0) hint.classList.add('hidden');
+      else hint.classList.remove('hidden');
+    }
+  });
+}, {passive:true});
+
+/* ── WHEEL → HORIZONTAL ── */
+track.addEventListener('wheel', e=>{
+  e.preventDefault();
+  if(locked) return;
+  const d = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+  if(Math.abs(d) < 8) return;
+  locked = true;
+  goTo(cur + (d > 0 ? 1 : -1));
+  clearTimeout(lockTimer);
+  lockTimer = setTimeout(()=>{ locked=false; }, 900);
+}, {passive:false});
+
+/* ── KEYBOARD ── */
+document.addEventListener('keydown', e=>{
+  if(e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(cur+1);
+  if(e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(cur-1);
+});
+
+/* ── TOUCH ── */
+let tx0;
+track.addEventListener('touchstart', e=>{ tx0 = e.touches[0].clientX; }, {passive:true});
+track.addEventListener('touchend',   e=>{
+  const dx = e.changedTouches[0].clientX - tx0;
+  if(Math.abs(dx) > 50) goTo(cur + (dx < 0 ? 1 : -1));
+}, {passive:true});
+
+/* ── INIT ── */
+window.addEventListener('load', ()=>{
+  const loader = document.getElementById('loader');
+  setTimeout(()=>{
+    loader.classList.add('out');
+    setTimeout(()=>loader.remove(), 1000);
+    animatePanel(0);
+    setTheme(0);
+  }, 1200);
+});
+</script>
+
+</body>
+</html>
